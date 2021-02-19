@@ -19,6 +19,7 @@ def user_login(request: WSGIRequest) -> HttpResponse:
         if user_login_form.is_valid():
             login(request, user_login_form.get_user())
             messages.success(request, 'successful Login')
+            return redirect('ecommerce:index')
 
     return render(request, 'pages/users/login.html', context={'form': user_login_form})
 

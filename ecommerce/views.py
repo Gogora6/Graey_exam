@@ -1,3 +1,5 @@
+from django.db.models import Sum, Q, Count
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.handlers.wsgi import WSGIRequest
@@ -14,7 +16,34 @@ from .choices import TicketStatus
 def index(request: WSGIRequest) -> HttpResponse:
     if not request.user.is_authenticated:
         return redirect('user:login')
-    return render(request, 'pages/ecommerce/index.html')
+    now = timezone.now()
+    user_orders_info = Order.objects.filter(user_id=request.user.pk).aggregate(
+        spent_money_year=Sum(
+            'price',
+            filter=Q(created_date__gte=now - timezone.timedelta(days=365))
+        ),
+        tickets_last_year=Count(
+            'id',
+            filter=Q(created_date__gte=now - timezone.timedelta(days=365))
+        ),
+        spent_money_month=Sum(
+            'price',
+            filter=Q(created_date__gte=now - timezone.timedelta(weeks=4)
+                     )),
+        tickets_last_month=Count(
+            'id',
+            filter=Q(created_date__gte=now - timezone.timedelta(weeks=4))
+        ),
+        spent_money_week=Sum(
+            'price',
+            filter=Q(created_date__gte=now - timezone.timedelta(days=7))
+        ),
+        tickets_last_week=Count(
+            'id',
+            filter=Q(created_date__gte=now - timezone.timedelta(days=7))
+        )
+    )
+    return render(request, 'pages/ecommerce/index.html', context={**user_orders_info})
 
 
 @login_required

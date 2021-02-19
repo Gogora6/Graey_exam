@@ -3,5 +3,19 @@
 {% block title %} Index Page {% endblock %}
 
 {% block content %}
-    <h1>Index Page!!</h1>
+    <hr>
+    <h2 style="color: red; text-align: center;">1 წლის მონაცემები</h2>
+    <h3>ბილეთების რაოდენობა: {{ tickets_last_year }} ცალი</h3>
+    <h3>დახარჯული თანხა: {{ spent_money_year }} $</h3>
+    <hr>
+    <h2 style="color: red; text-align: center;">1 თვის მონაცემები</h2>
+
+    <h3>ბილეთების რაოდენობა: {{ tickets_last_month }} ცალი</h3>
+    <h3> დახარჯული თანხა: {{ spent_money_month }} $</h3>
+    <hr>
+    <h2 style="color: red; text-align: center;">1 კვირის მონაცემები</h2>
+
+    <h3>ბილეთების რაოდენობა: {{ tickets_last_week }} ცალი</h3>
+    <h3> დახარჯული თანხა: {{ spent_money_week }} $</h3>
+    <hr>
 {% endblock %}
