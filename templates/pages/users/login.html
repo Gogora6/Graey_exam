@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block title %} Login Page {% endblock %}
+
+{% block content %}
+    <form action="{% url 'user:login' %}" method="POST">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error, error_text in form.errors.items %}
+                    <p class="error">{{ error_text }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if messages %}
+            <div class="alert alert-success" role="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {{ form }}
+        <button>
+            Login
+        </button>
+    </form>
+
+{% endblock %}

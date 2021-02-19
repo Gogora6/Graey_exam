@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block title %} Orders List {% endblock %}
+
+{% block content %}
+    <div class="card-group">
+
+        {% for ticket in tickets %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ticket.name }}</h5>
+                    <p class="card-text">start Date : {{ ticket.start_date }}</p>
+                    <p class="card-text">end Date : {{ ticket.end_date }}</p>
+                    <p class="card-text">price : {{ ticket.price }}</p>
+
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+    {% if tickets.has_other_pages %}
+        <ul class="pagination">
+            {% if tickets.has_previous %}
+                <li><a href="?page={{ tickets.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in tickets.paginator.page_range %}
+                {% if tickets.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if tickets.has_next %}
+                <li><a href="?page={{ tickets.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %} Orders List {% endblock %}
+
+{% block content %}
+    <h1><a href="{% url 'ecommerce:create_orders' %}">Create Order</a></h1>
+    <br>
+    <br>
+    {% for order in orders %}
+        <h4>Ticket Name: {{ order.ticket }}</h4>
+        <h4>Price : {{ order.price }} $</h4>
+        <h4>Created Date{{ order.created_date }}</h4>
+        <hr>
+    {% endfor %}
+{% endblock %}
