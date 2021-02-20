@@ -1,7 +1,7 @@
 from django.db.models import Sum, Q, Count
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.handlers.wsgi import WSGIRequest
 
 from django.http import HttpResponse
@@ -13,9 +13,8 @@ from ecommerce.models import Order, Ticket
 from .choices import TicketStatus
 
 
+@login_required(redirect_field_name=None)
 def index(request: WSGIRequest) -> HttpResponse:
-    if not request.user.is_authenticated:
-        return redirect('user:login')
     now = timezone.now()
     user_orders_info = Order.objects.filter(user_id=request.user.pk).aggregate(
         spent_money_year=Sum(
@@ -71,8 +70,21 @@ def create_orders(request: WSGIRequest) -> HttpResponse:
 
 @login_required
 def ticket_list(request: WSGIRequest) -> HttpResponse:
+    search_word = request.GET.get('q')
+
+    tickets = Ticket.objects.filter(status=TicketStatus.available)
+    if search_word:
+        tickets = tickets.filter(name__contains=search_word)
+
     page = request.GET.get('page', 1)
-    tickets: Ticket = Ticket.objects.filter(status=TicketStatus.available)
-    paginator = Paginator(tickets, 10)
-    tickets = paginator.page(page)
+
+    paginator = Paginator(tickets, 2)
+
+    try:
+        tickets = paginator.page(page)
+    except PageNotAnInteger:
+        tickets = paginator.page(1)
+    except EmptyPage:
+        tickets = paginator.page(paginator.num_pages)
+
     return render(request, 'pages/ecommerce/tickets.html', context={'tickets': tickets})

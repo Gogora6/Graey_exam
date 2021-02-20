@@ -3,6 +3,13 @@
 {% block title %} Orders List {% endblock %}
 
 {% block content %}
+    <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'ecommerce:tickets_list' %}">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" name="q" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+
+    <br>
+    <br>
     <div class="card-group">
         {% for ticket in tickets %}
             <div class="card">
@@ -20,7 +27,9 @@
     {% if tickets.has_other_pages %}
         <ul class="pagination">
             {% if tickets.has_previous %}
-                <li><a href="?page={{ tickets.previous_page_number }}">&laquo;</a></li>
+                <li><a href="?page=
+                        {{ tickets.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo;</a>
+                </li>
             {% else %}
                 <li class="disabled"><span>&laquo;</span></li>
             {% endif %}
@@ -28,11 +37,12 @@
                 {% if tickets.number == i %}
                     <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                 {% else %}
-                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    <li><a href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }} </a></li>
                 {% endif %}
             {% endfor %}
             {% if tickets.has_next %}
-                <li><a href="?page={{ tickets.next_page_number }}">&raquo;</a></li>
+                <li><a href="?page={{ tickets.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                >&raquo;</a></li>
             {% else %}
                 <li class="disabled"><span>&raquo;</span></li>
             {% endif %}

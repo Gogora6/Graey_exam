@@ -11,7 +11,7 @@ from user.forms import CustomUserRegistrationForm
 
 def user_login(request: WSGIRequest) -> HttpResponse:
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('ecommerce:index')
     user_login_form = AuthenticationForm()
 
     if request.method == 'POST':
@@ -29,12 +29,13 @@ def user_logout(request: WSGIRequest) -> HttpResponse:
         logout(request)
         messages.success(request, 'successful logout')
         return redirect('user:login')
-    return HttpResponse(status=404)
+    return HttpResponse(status=405)
 
 
 def user_registration(request: WSGIRequest) -> HttpResponse:
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('ecommerce:index')
+
     user_registration_form = CustomUserRegistrationForm()
     if request.method == 'POST':
         user_registration_form = CustomUserRegistrationForm(request.POST)
